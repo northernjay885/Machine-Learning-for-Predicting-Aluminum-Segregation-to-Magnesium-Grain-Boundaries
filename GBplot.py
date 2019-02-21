@@ -325,3 +325,44 @@ class Plot:
                 os.mkdir('images')
             pio.write_image(fig, filename)
         py.iplot(fig)
+
+
+    def draw_segE_bins(self, export = False):
+    ########################################################################################
+    #  Input:                                                                              #     
+    #        export: Export .svg image if True, default is False.                          #
+    #  Output:                                                                             #
+    #        The plot of the segregation energy of the atoms we wish to explore.           #
+    ########################################################################################
+        mat = self.mat
+        for i in range(self.length_A):
+            if i == 0:
+                segE = mat['A']['Eseg'][0,0]
+                #check whether this is a valid data?
+                n1 = segE[:,0] != 0 
+                segE = segE[n1,:]
+                segE_all = segE
+            else:
+                segE = mat['A']['Eseg'][0,i]
+                #check whether this is a valid data?
+                n1 = segE[:,0] != 0 
+                segE = np.squeeze(segE[n1,:])
+                segE_all = np.concatenate([segE_all, segE])
+                
+        main = go.Histogram(x = np.squeeze(segE_all[:,1]), xbins = dict(size = 0.01),
+                        ybins = dict(start =0, end = 1000),
+                        marker = dict(line = dict(color = 'white',width = 1)))
+        data = [main]
+        layout = go.Layout(autosize = False, 
+                    height = 800,
+                    width = 800, 
+                    xaxis={'title':'Segregation Energy(eV)', 'zeroline':False},
+                    yaxis = {'title':'Number of Sites', 'zeroline':False}
+                    )
+        fig = go.Figure(data = data, layout = layout)
+        
+        if export == True:
+            if not os.path.exists('images'):
+                os.mkdir('images')
+            pio.write_image(fig, 'images/segEhistogram.svg')
+        py.iplot(fig)
