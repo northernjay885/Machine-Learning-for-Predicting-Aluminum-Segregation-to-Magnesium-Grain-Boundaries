@@ -194,9 +194,6 @@ class Plot:
     #        The plot of the segeregation energy value vs the descriptor value.            #
     ########################################################################################
         mat = self.mat
-        
-        
-        
         for i in range(self.length_A):
             if i == 0:
                 segE = mat['A']['Eseg'][0,0]
@@ -205,13 +202,7 @@ class Plot:
                 segE = segE[n1,:]
 
                 atom_ID = segE[:,0].astype(int) - 1
-                if descriptor_Name == 'Hstress':
-                    descriptor_temp = mat['A']['peratom'][0,0][0,0]['stress']
-                elif descriptor_Name == 'fmag':
-                    descriptor_temp = mat['A']['peratom'][0,0][0,0]['f']
-                else:
-                    descriptor_temp = mat['A']['peratom'][0,0][0,0][descriptor_Name][:,subnum]
-                
+                descriptor_temp = mat['A']['peratom'][0,0][0,0][descriptor_Name][:,0]
                 descriptor_all = descriptor_temp[atom_ID]
                 segE_all = segE
             else:
@@ -221,22 +212,10 @@ class Plot:
                 segE = np.squeeze(segE[n1,:])
 
                 atom_ID = segE[:,0].astype(int) - 1
-                if descriptor_Name == 'Hstress':
-                    descriptor_temp = mat['A']['peratom'][0,i][0,0]['stress']
-                elif descriptor_Name == 'fmag':
-                    descriptor_temp = mat['A']['peratom'][0,i][0,0]['f']
-                else:
-                    descriptor_temp = mat['A']['peratom'][0,i][0,0][descriptor_Name][:,subnum]
-                
+                descriptor_temp = mat['A']['peratom'][0,i][0,0][descriptor_Name][:,0]
                 descriptor_temp = descriptor_temp[atom_ID]
-                descriptor_all = np.concatenate([descriptor_all, descriptor_temp], axis = 0)
+                descriptor_all = np.concatenate([descriptor_all, descriptor_temp])
                 segE_all = np.concatenate([segE_all, segE])
-            
-        #post process for Hstress and fmag
-        if descriptor_Name == 'Hstress':
-                descriptor_all = np.sum(descriptor_all[:,0:3], axis = 1) / 3
-        elif descriptor_Name == 'fmag':
-                descriptor_all = np.linalg.norm(descriptor_all, axis = 1, ord = 2)
         
         #calculate correlation coefficient
         R = np.corrcoef(np.squeeze(descriptor_all), segE_all[:,1])[0,1]
@@ -313,7 +292,7 @@ class Plot:
                 segE_all = np.concatenate([segE_all, segE])
 
         descriptor_all[:,2] = abs(descriptor_all[:,2]-min(descriptor_all[:,2])-20)
-        sigma_H = np.sum(descriptor_all[:,11:14], axis = 1)/3
+        sigma_H = np.sum(descriptor_all[:,11:13], axis = 1)/3
         f_mag = np.linalg.norm(descriptor_all[:,8:11], axis = 1, ord = 2)
 
         feature = np.concatenate([descriptor_all, sigma_H[:,np.newaxis], f_mag[:,np.newaxis], segE_all[:,1][:,np.newaxis]], axis = 1)
