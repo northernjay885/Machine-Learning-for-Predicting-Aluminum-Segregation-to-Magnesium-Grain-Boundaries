@@ -68,8 +68,8 @@ class Plot:
         layout = go.Layout(autosize = False, 
                     height = 800,
                     width = 800, 
-                    xaxis={'title':'Distance from GB', 'zeroline':False},
-                    yaxis = {'title':'Segeregation Energy(eV)','zeroline':False},
+                    xaxis={'title':'Distance from GB', 'zeroline':False, 'titlefont':dict(size = 23), 'tickfont':dict(size = 23)},
+                    yaxis = {'title':'Segeregation Energy(eV)','zeroline':False, 'titlefont':dict(size = 23), 'tickfont':dict(size = 23)},
                     shapes =[{'type':'line', 
                                 'x0':-25,
                                 'x1':25,
@@ -82,12 +82,12 @@ class Plot:
                     annotations = [
                         dict(
                         x = 0.08,
-                        y = 0.925,
+                        y = 0.94,
                         xref = 'paper',
                         yref = 'paper',
                         text = '$\\text{GB Energy: %4.1f}\ mJ/m^2$'%(gbE),
                         showarrow = False,
-                        font = dict(size = 10)
+                        font = dict(size = 20)
                         ),
                         dict(
                         x = 0.08,
@@ -99,11 +99,11 @@ class Plot:
                                                                 gb_tilt[2],
                                                                 gb_tilt[3]),
                         showarrow = False,
-                        font = dict(size = 10)
+                        font = dict(size = 20)
                         ),
                         dict(
                         x = 0.08,
-                        y = 0.875,
+                        y = 0.86,
                         xref = 'paper',
                         yref = 'paper',
                         text = '$\\text{GB Normal: [%d %d %d %d]}$'%(gb_norm1[0],
@@ -112,7 +112,7 @@ class Plot:
                                                                     gb_norm1[3]
                         ),
                         showarrow = False,
-                        font = dict(size = 10)
+                        font = dict(size = 20)
                         ),
                         dict(
                         x = 0.08,
@@ -121,7 +121,7 @@ class Plot:
                         yref = 'paper',
                         text = '$\\text{Min Segregation: %4.2f eV}$'%(min(segE[:,1])),
                         showarrow = False,
-                        font = dict(size = 10)
+                        font = dict(size = 20)
                         ),
                     ]
                     )
@@ -162,7 +162,7 @@ class Plot:
                 text = np.around(segE[:,1],3).tolist(),
                 hoverinfo = 'text',
                 marker={'size':atomsize/1.5, 'color':segE[:,1], 'colorscale':'Rainbow' ,
-                'symbol':'circle','showscale':True}, 
+                'symbol':'circle','showscale':True, 'colorbar':dict(tickfont = dict(size = 23))}, 
                 mode='markers'
                 )
         data = [main]
@@ -170,8 +170,8 @@ class Plot:
         layout = go.Layout(autosize = False,
                     height = 800,
                     width = 1200/np.ptp(atom_pos[atom_ID,2])*np.ptp(atom_pos[atom_ID,0]),     
-                    xaxis={'zeroline':False},
-                    yaxis = {'zeroline':False}   
+                    xaxis={'zeroline':False, 'titlefont':dict(size = 23), 'tickfont':dict(size = 23)},
+                    yaxis = {'zeroline':False, 'titlefont':dict(size = 23), 'tickfont':dict(size = 23)}   
                     )
         fig = go.Figure(data = data, layout = layout)
         plot = py.iplot(fig)
@@ -253,8 +253,8 @@ class Plot:
         layout = go.Layout(autosize = False, 
                 height = 800,
                 width = 800, 
-                xaxis={'title':descriptor_Name, 'zeroline':False},
-                yaxis = {'title':'Segregation Energy(eV)', 'zeroline':False},
+                xaxis={'title':descriptor_Name, 'zeroline':False, 'titlefont':dict(size = 23), 'tickfont':dict(size = 23)},
+                yaxis = {'title':'Segregation Energy(eV)', 'zeroline':False, 'titlefont':dict(size = 23), 'tickfont':dict(size = 23)},
                 annotations = [
                         dict(
                         x = 0,
@@ -263,7 +263,7 @@ class Plot:
                         yref = 'paper',
                         text = '$\\rho= \\text{%4.2f}$'%(R),
                         showarrow = False,
-                        font = dict(size = 12)
+                        font = dict(size = 23)
                         )
                     ]
                 )
@@ -338,8 +338,11 @@ class Plot:
         trace = go.Heatmap(z=R,
                     x=descriptor_keys,
                     y=descriptor_keys,
-                    colorscale = 'Portland')
-        layout = dict(height = 1000, width = 1000)
+                    colorscale = 'Portland',
+                    colorbar=dict(tickfont = dict(size = 23))
+                    )
+        layout = dict(height = 1200, width = 1200, xaxis={'zeroline':False, 'tickfont':dict(size = 23)},
+            yaxis = {'zeroline':False, 'tickfont':dict(size = 23)})
         fig = go.Figure(data = [trace], layout = layout)
         if export == True:
             if not os.path.exists('images'):
